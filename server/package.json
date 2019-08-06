@@ -1,0 +1,19 @@
+{
+  "name": "note.io",
+  "version": "0.1.0",
+  "description": "a centralized, server based notes app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jrc356/Note.io.git"
+  },
+  "author": "Jon Corbin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jrc356/Note.io/issues"
+  },
+  "homepage": "https://github.com/Jrc356/Note.io#readme"
+}

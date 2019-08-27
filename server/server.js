@@ -45,6 +45,8 @@ all info from notes
 list of notes under key "data"
 
 /Save
+sends update to db
+token in header
 
 
 create .env

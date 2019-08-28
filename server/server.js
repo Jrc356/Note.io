@@ -1,9 +1,11 @@
 //Requirements
 const express = require('express');
-
+const cors = require('cors');
 const app = express();
-app.use(express.static('../client'));
 
+
+app.use(express.static('../client'));
+app.use(cors());
 
 /// REPLACE ///
 const mysql = require('mysql');

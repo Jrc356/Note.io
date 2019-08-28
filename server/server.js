@@ -1,6 +1,8 @@
 //Requirements
 var express = require('express');
+
 var app = express();
+app.use(express.static("client"));
 
 
 /// REPLACE ///
@@ -20,10 +22,7 @@ con.connect(function(err) {
 	}
 	else {
 		console.log("")
-
-app.use(express.static("."));
-app.listen(3000, function() {
-	console.log("Server started.")
+	}
 });
 
 app.post("/Auth", function(req, res) {
@@ -32,19 +31,19 @@ app.post("/Auth", function(req, res) {
 });
 
 app.get("/Notes", function(req,res) {
-	
-	
+	// all info from notes
+	// list of notes under key "data"
 });
 
-/Auth
-token for header
-message in json
+// Auth
+// token for header
+// message in json
 
-/Notes
-all info from notes
-list of notes under key "data"
-
-/Save
+// Save
 
 
-create .env
+// create .env
+
+app.listen(3000, function() {
+	console.log("Server started.")
+});

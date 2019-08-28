@@ -1,13 +1,14 @@
 //Requirements
-var express = require('express');
+const express = require('express');
+const path = require('path');
 
-var app = express();
-app.use(express.static("client"));
+const app = express();
+app.use(express.static('../client'));
 
 
 /// REPLACE ///
-var mysql = require('mysql');
-var con = mysql.createCOnnection({
+const mysql = require('mysql');
+const con = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
 	password: '',

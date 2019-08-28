@@ -1,0 +1,73 @@
+/* Table */
+
+
+/* 
+COLORS:
+PRIMARY: #ececec
+SECONDAY: #9fd3c7
+TERTIARY: #385170
+QUINTARY: #142d4c
+*/
+
+#notes {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ececec;
+}
+
+.notes_header {
+  background-color: #385170;
+  color: white;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+}
+
+.note:hover{
+  background-color: #ddd;
+}
+
+.notes_item{
+  padding: 10px;
+}
+
+.notes_title_header{
+  width: 25%;
+}
+
+.snippet{
+  width: 75%;
+}
+/* End Table */
+
+/* Nav */
+#navbar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #142d4c;
+  border-bottom: 1px solid #385170;
+  
+
+}
+
+.nav_item {
+  float: right;
+  border-left: 1px solid #385170;
+}
+
+.nav_item a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.nav_item a:hover {
+  background-color: #385170;
+}
+
+/* End Nav */

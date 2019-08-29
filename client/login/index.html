@@ -1,32 +1,26 @@
+<!DOCTYPE html>
 <html>
     <head>
+    <meta charset="utf-8">
+    <title>Note.io - Login</title>
 
-    <title>
-    Notes.io Login
-    </title>
-
+    <!-- CSS -->
+    <link rel='stylesheet' type='text/css' href="index.css">
+    <!-- End CSS -->
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="login.js"></script>
-    <!-- End scripts -->
-    
+    <!-- End scripts -->    
     </head>
-
     <body>
-        <h1>
-            Notes.io Login
-        </h1>
-
-        <input type="text" id="User" placeholder="Enter Username">
-        <br>
-        <input type="password" id="Password" placeholder="Enter Password">
-        <br>
-        <input type="button" id="LoginButton" value="Login" onclick="Login()">
-        <br>
-        <div id="maindiv"></div>
-        <br>
-        <br>
-        <img src="https://static.makeuseof.com/wp-content/uploads/2013/05/notepad.png" alt="Notepad" height="250px" width="250px">
+        <div id="wrapper" align='center'>
+            <h1 id="site_title">Note.io Login</h1>
+            <input type="text" id="User" placeholder="Enter Username"><br>
+            <input type="password" id="Password" placeholder="Enter Password"><br>
+            <input type="button" id="LoginButton" value="Login" onclick="login()"><br>
+            <div id="maindiv"></div><br>
+            <img src="https://static.makeuseof.com/wp-content/uploads/2013/05/notepad.png" alt="Notepad" height="250px" width="250px">
+        </div>
     </body>
 </html>

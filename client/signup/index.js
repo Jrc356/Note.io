@@ -1,4 +1,4 @@
-function login(){
+function signup(){
 	var username = document.getElementById("User").value //get username input from textbox
 	var password = document.getElementById("Password").value //get password input from textbox
 	

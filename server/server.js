@@ -76,7 +76,7 @@ app.post("/auth", function(req, res) {
 	// }
 
 	//Setting up the token response and query for authentication and token reserve
-	var authObj = { 'token' : genToken(), 'message' : '' };
+	var authObj = { 'token' : '', 'message' : '' };
 	var userCorrect = 0;
 	var authQuery = '';
 	//var authQuery = <AUTHQUERY> with req.query.userName
@@ -119,6 +119,7 @@ app.post("/auth", function(req, res) {
 			else {
 				console.log('Successfully inserted rows');
 				authObj.message = 'Login was successful.';
+				authObj.token = getToken() 
 				res.write(authObj);
 				res.redirect('http://localhost:3000/home')
 				res.end();
@@ -134,6 +135,7 @@ app.get("/notes", function(req,res) {
 	//all info from notes
 	//list of notes under key "data"
 	
+<<<<<<< HEAD
 	res.send({data: [
 		{
 			id: 'ascjub',
@@ -203,6 +205,31 @@ app.get('/note', (req, res) => {
 			id: 'avurhbvaurhgb',
 			title: 'afshvueikrav',
 			content: 'adsfagreagaeg'
+=======
+	//Setting up token and query variables
+	var tokenValue = req.headers.token;
+	var notesQuery = '';
+	//var noteQuery = <NOTESQUERY> using userid
+
+	//Querying for token
+	if (isauthenticated(tokenValue) == False) {
+		console.log("Auth Failed");
+		res.status(403);
+		res.end();
+	}
+	
+	//Querying for the notes from the database
+	con.query(noteQuery,
+		function(err,rows,fields){
+		if (err) {
+			console.log('Error during processing.');
+			console.log(err);
+		}
+		else {
+			console.log('Obtained a response.');
+			res.write(rows);
+			res.end();
+>>>>>>> lpc37
 		}
 	]}
 
@@ -241,6 +268,37 @@ app.post("/save", function(req,res) {
 	res.send({status: 'ok'});
 	//token in header
 	
+	var tokenValue = req.headers.token;
+	var saveQuery = '';
+	//var saveQuery = 'QUERY TO DB TO SAVE req.query.note, req.query.headline USING req.query.id';	
+	
+	//Quering for token
+	if (isauthenticated(tokenValue) == False) {
+		console.log("Auth Failed");
+		res.status(403);
+		res.end();
+	}
+	
+	con.query(saveQuery,
+		function(err,result) {
+		if (err) {
+			console.log('Error during insertion.');
+			console.log(err);
+			res.status(500);
+			res.end();
+		}
+		else {
+			res.status(200);
+			res.end();
+		}
+	});
+	
+});
+
+app.post("/adduser", function(req,res) {
+	////AddUser
+	//Sends user info to db
+	//redirect to login
 	
 	
 });

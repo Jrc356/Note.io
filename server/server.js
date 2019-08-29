@@ -33,8 +33,15 @@ con.connect(function(err) {
 
 //Function that generates a key for the user
 function genToken() {
+	var token = "";
+	var chars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()[]\;',./{}|:<>?`~-=_+";
+	var charsLen = chars.length;
 	
-	return "zza67n&dhs09jj12#"
+	for (i=0; i < 225; i++) {
+		token = token + chars[Math.floor(Math.random() * 92) - 1];
+	}
+	
+	return token
 }
 
 //Function to check if a token exists in the database
@@ -57,6 +64,14 @@ function isAuthenticated(token) {
 		}
 		});
 }
+
+
+
+app.use(express.static("."));
+app.listen(3000, function() {
+	console.log("Server started.")
+	console.log(genToken())
+});
 
 
 app.post("/auth", function(req, res) {

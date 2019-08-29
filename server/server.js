@@ -37,13 +37,8 @@ function genToken() {
 	return "zza67n&dhs09jj12#"
 }
 
-<<<<<<< HEAD
-function isAuthenticated(token) {
-	return true;
-}
-=======
 //Function to check if a token exists in the database
-function isauthenticated(token) {
+function isAuthenticated(token) {
 	var tokenQuery = "QUERY FOR TOKEN token";
 	
 	con.query(tokenQuery,
@@ -63,14 +58,6 @@ function isauthenticated(token) {
 		});
 }
 
-
-
-app.use(express.static("."));
-app.listen(3000, function() {
-	console.log("Server started.")
-	console.log((Math.floor(Math.random() * 55)))
-});
->>>>>>> lpc37
 
 app.post("/auth", function(req, res) {
 	////Auth
@@ -113,11 +100,7 @@ app.post("/auth", function(req, res) {
 				userCorrect = 1;
 			}
 		}
-<<<<<<< HEAD
 	});
-=======
-		});
->>>>>>> lpc37
 	
 	//Redirecting and sending information back to the user
 	if (userConnect == 1) {
@@ -131,11 +114,7 @@ app.post("/auth", function(req, res) {
 				console.log('Successfully inserted rows');
 				authObj.message = 'Login was successful.';
 				res.write(authObj);
-<<<<<<< HEAD
 				res.redirect('http://localhost:3000/home')
-=======
-				res.redirect('http://localhost:3000/Home')
->>>>>>> lpc37
 				res.end();
 			}
 			});

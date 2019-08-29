@@ -2,15 +2,16 @@
 "getTokenByID" : "select * from userToken where tokenID = '{tokenID}'",
 "getTokenByStr" : "select * from userToken where tokenStr = '{tokenStr}'",
 "addToken" : "INSERT INTO userToken(tokenID, userID, tokenStr) VALUES ('{tokenID}', '{userID}', '{tokenStr}')",
-"deleteToken" : "DELETE FROM userToken where tokenID = '{User Entered tokenID}'",
+"deleteTokenID" : "DELETE FROM userToken where tokenID = '{User Entered tokenID}'",
 
 
 "addUser" : "INSERT INTO userTable(userID, userName, userEmail, userPassword) VALUES ('{userID}', '{userName}','{userEmail}','{userPassword}')",
 "getUserByUserID" : "select * from userTable where userID = '{userID}'",
-"getUserNotes" : "select * from userNotes where ownerID = '{userID}'",
+"getUserNotesByID" : "select * from userNotes where ownerID = '{userID}'",
 
 "getNotesByNotesID" : "select * from userNotes where notesID = '{notesID}'",
 "addNotes" : "INSERT INTO userNotes(notesID, Title, Content, ownerID) VALUES ('{notesID}', '{Title}', '{Content}', '{ownerID}')",
 "updateTitle" : "UPDATE userNotes SET Title = '{Title}' where notesID = '{notesID}'",
-"upDateContent" : "'UPDATE userNotes SET Content = '{Content}' where notesID = '{notesID}'"
+"updateContent" : "'UPDATE userNotes SET Content = '{Content}' where notesID = '{notesID}'",
+"deleteNotesByID" : "DELETE FROM notesID where notesID = '{notesID}'"
 }

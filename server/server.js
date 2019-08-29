@@ -24,7 +24,7 @@ con.connect(function(err) {
 
 //Function that generates a key for the user
 function genToken() {
-	//Generate a key using a method descibed later
+	
 	return "zza67n&dhs09jj12#"
 }
 
@@ -54,6 +54,7 @@ function isauthenticated(token) {
 app.use(express.static("."));
 app.listen(3000, function() {
 	console.log("Server started.")
+	console.log((Math.floor(Math.random() * 55)))
 });
 
 app.post("/auth", function(req, res) {
@@ -91,6 +92,7 @@ app.post("/auth", function(req, res) {
 			else {
 				userCorrect = 1;
 			}
+		}
 		});
 	
 	//Redirecting and sending information back to the user
@@ -105,7 +107,7 @@ app.post("/auth", function(req, res) {
 				console.log('Successfully inserted rows');
 				authObj.message = 'Login was successful.';
 				res.write(authObj);
-				res.redirect('http://localhost:8080/Home')
+				res.redirect('http://localhost:3000/Home')
 				res.end();
 			}
 			});
@@ -125,10 +127,11 @@ app.get("/notes", function(req,res) {
 	//var noteQuery = <NOTESQUERY> using 
 
 	//Querying for token
-	if not isauthenticated(tokenValue) {
+	if (isauthenticated(tokenValue) == False) {
 		console.log("Auth Failed");
 		res.status(403);
 		res.end();
+	}
 	
 	//Querying for the notes from the database
 	con.query(noteQuery,

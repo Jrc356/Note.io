@@ -28,6 +28,27 @@ function genToken() {
 	return "zza67n&dhs09jj12#"
 }
 
+//Function to check if a token exists in the database
+function isauthenticated(token) {
+	var tokenQuery = "QUERY FOR TOKEN token";
+	
+	con.query(tokenQuery,
+		function(err,rows,fields) {
+		if (err) {
+			console.log('Error during processing.');
+			console.log(err);
+		}
+		else {
+			if (rows.size == 0) {
+				return False;	
+			}
+			else {
+				return True;	
+			}
+		}
+		});
+}
+
 
 
 app.use(express.static("."));
@@ -41,7 +62,7 @@ app.post("/auth", function(req, res) {
 	//message in json
 	
 	//Setting up the token response and query for authentication and token reserve
-	var authObj = { 'user' : req.query.userName, 'token' : genToken(), 'message' : '' };
+	var authObj = { 'token' : genToken(), 'message' : '' };
 	var userCorrect = 0;
 	var authQuery = '';
 	//var authQuery = <AUTHQUERY> with req.query.userName
@@ -98,57 +119,32 @@ app.get("/notes", function(req,res) {
 	//all info from notes
 	//list of notes under key "data"
 	
-	//Setting up token, username, and query variables
+	//Setting up token and query variables
 	var tokenValue = req.headers.token;
-	var userNameValue = req.headers.userName;
-	var tokenVerified = 0;
-	var responseObj = { 'notes' : {}, 'message' : '' };
-	var tokenQuery = '';
-	//var tokenQuery = <TOKENQUERY> with userNameValue and tokenValue
 	var notesQuery = '';
-	//var noteQuery = <NOTESQUERY> using userNameValue
+	//var noteQuery = <NOTESQUERY> using 
 
 	//Querying for token
-	con.query(tokenQuery,
-		function(err,rows,fields) {
+	if not isauthenticated(tokenValue) {
+		console.log("Auth Failed");
+		res.status(403);
+		res.end();
+	
+	//Querying for the notes from the database
+	con.query(noteQuery,
+		function(err,rows,fields){
 		if (err) {
 			console.log('Error during processing.');
 			console.log(err);
 		}
 		else {
-			if (rows.size == 0) {
-				responseObj.message = 'No token was found for this username.';
-				res.write(responseObj);
-				res.end();	
-			}
-			else if (rows[0].token != tokenValue) {
-				responseObj.message = 'Token is incorrect.';
-				res.write(responseObj);
-				res.end();
-			}
-			else {
-				tokenVerified = 1;
-			}
+			console.log('Obtained a response.');
+			repsonseObj.notes = rows;
+			responseObj.message = 'Successfully gained a response.';
+			res.write(responseObj);
+			res.end();
 		}
 		});
-	
-	//Querying for the notes from the database
-	if (tokenVerified == 1) {
-		con.query(noteQuery,
-			function(err,rows,fields){
-			if (err) {
-				console.log('Error during processing.');
-				console.log(err);
-			}
-			else {
-				console.log('Obtained a response.');
-				repsonseObj.notes = rows;
-				responseObj.message = 'Successfully gained a response.';
-				res.write(responseObj);
-				res.end();
-			}
-			});
-	}
 });
 
 app.get("/save", function(req,res) {

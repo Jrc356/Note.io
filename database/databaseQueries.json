@@ -5,7 +5,7 @@
 "deleteTokenID" : "DELETE FROM userToken where tokenID = '{tokenID}'",
 
 
-"addUser" : "INSERT INTO userTable(userName, userEmail, userPassword) VALUES ('{userName}','{userEmail}','{userPassword}')",
+"addUser" : "INSERT INTO userTable(userName, userPassword) VALUES ('{userName}','{userPassword}')",
 "getUserByUserID" : "select * from userTable where userID = '{userID}'",
 "getUserNotesByID" : "select * from userNotes where ownerID = '{userID}'",
 

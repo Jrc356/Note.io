@@ -35,7 +35,7 @@ app.listen(3000, function() {
 	console.log("Server started.")
 });
 
-app.post("/Auth", function(req, res) {
+app.post("/auth", function(req, res) {
 	////Auth
 	//token for header
 	//message in json
@@ -93,7 +93,7 @@ app.post("/Auth", function(req, res) {
 	
 });
 
-app.get("/Notes", function(req,res) {
+app.get("/notes", function(req,res) {
 	////Notes
 	//all info from notes
 	//list of notes under key "data"
@@ -151,7 +151,7 @@ app.get("/Notes", function(req,res) {
 	}
 });
 
-app.get("/Save", function(req,res) {
+app.get("/save", function(req,res) {
 	//Please note this is just a temp placeholder, probably will be a post request to the api
 	//Also, let me know of a better name for this process
 	

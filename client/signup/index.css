@@ -32,7 +32,7 @@ input {
     width: 15%;
 }
 
-#LoginButton {
+#SignUpButton {
     background-color: #385170;
     border: none;
     color: white;
@@ -42,6 +42,6 @@ input {
     font-size: 16px;
 }
 
-#LoginButton:hover {
+#SignUpButton:hover {
     background-color: #142d4c;
 }

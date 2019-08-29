@@ -30,7 +30,7 @@ VALUES ("user4", "default4");
 CREATE TABLE userNotes(
 	notesID int NOT NULL AUTO_INCREMENT,
 	Title varchar(225),
-	Content varchar(225),
+	Content TEXT,
 	ownerID int,
 	
 	PRIMARY KEY (notesID), 
@@ -65,9 +65,11 @@ VALUES ("Example 8", "Example 8", "000004");
 
 CREATE TABLE userToken(
 	tokenID int NOT NULL AUTO_INCREMENT,
+	userID int,
 	tokenStr varchar(225),
 	
-	PRIMARY KEY (tokenID)
+	PRIMARY KEY (tokenID),
+	CONSTRAINT FK_userID FOREIGN KEY(userID) REFERENCES userTable(userID)
 );
 
 

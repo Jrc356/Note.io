@@ -1,7 +1,7 @@
 {
 "getTokenByID" : "select * from userToken where tokenID = '{tokenID}'",
 "getTokenByStr" : "select * from userToken where tokenStr = '{tokenStr}'",
-"addToken" : "INSERT INTO userToken(userID, tokenStr) VALUES ('{tokenStr}')",
+"addToken" : "INSERT INTO userToken(userID, tokenStr) VALUES ('{userID}', '{tokenStr}')",
 "deleteTokenStr" : "DELETE FROM userToken where tokenStr = '{tokenStr}'",
 
 

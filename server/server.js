@@ -151,6 +151,49 @@ app.get("/notes", function(req,res) {
 	}
 });
 
+app.get('/note', (req, res) => {
+	const { id } = req.query;
+
+	console.log(`Received request for note with id "${id}"`);
+
+	//TODO Implement query note by id here
+	//TODO remove dummy data
+	data = {data: [
+		{
+			id: 'ascjub',
+			title: 'ajdsvre',
+			content: 'iuvbaiusbviubariuevbiursbvkjsbdfbkjvnfadkjgvhauikervhiureabvn'
+		},
+		{
+			id: 'breq',
+			title: 'zgre',
+			content: 'adskbjvkafbndvknfdaikubvhioudhsbfiuhadkfhbvkjanvskiu hdiouvhkdsahkfzyekufhbaiuebcviua eiuahgfkugh kuaku gkuzdhf vkuahkuhf aikg fjkgakjhkaj gfja gjkhea gjkl aelfgjaegfjk lagjkfl '
+		},
+		{
+			id: 'avurhbvaurhgb',
+			title: 'afshvueikrav',
+			content: 'adsfagreagaeg'
+		}
+	]}
+
+
+	const note = ((id) => {
+		n = null;
+		data.data.forEach(nt => {
+			if (nt.id === id) {
+				n = nt;
+			}
+		});
+
+		return n;
+	})(id);
+
+	const {title, content} = note;
+
+	res.render('note/note.html', {title, content});
+})
+
+
 app.get("/save", function(req,res) {
 	//Please note this is just a temp placeholder, probably will be a post request to the api
 	//Also, let me know of a better name for this process

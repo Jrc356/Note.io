@@ -96,7 +96,7 @@ app.post("/auth", function(req, res) {
 				console.log('Successfully inserted rows');
 				authObj.message = 'Login was successful.';
 				res.write(authObj);
-				res.redirect('http://localhost:8080/Home')
+				res.redirect('http://localhost:3000/home')
 				res.end();
 			}
 			});

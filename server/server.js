@@ -6,6 +6,7 @@ require('dotenv').config()
 
 const queries = require('../mySQL database/databaseQueries.json')
 
+// queries.getTokenByID.replace('{tokenID', tokenID);
 
 const app = express();
 app.use(express.static('../client'));

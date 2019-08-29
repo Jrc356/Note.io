@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Note.io - <%= title %></title>
+    
+    <!-- CSS -->
+    <link rel='stylesheet' type='text/css' href="note.css">
+    <!-- CSS -->
+
+    <!-- Scripts -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous">
+    </script>
+    <script src="note.js"></script>
+    <!-- End Scripts -->
+  </head>
+
+  <body>
+      <div id="wrapper">
+        <div id="header">
+          <ul id="navbar">
+            <li class="nav_item"><a href="/logout">Logout</a></li>
+            <li class="nav_item"><a href="/note">New Note</a></li>
+            <li class="nav_item"><a href="/home">Home</a></li>
+          </ul> <!-- End navbar -->
+        </div> <!-- End header -->
+        <div id="content">
+          <div id="note_status">
+            <p id="status" align='right'>
+              Changes Saved
+            </p>
+          </div> <!-- End status -->
+          <div id="note_title">
+            <input id="title" type="text" value="<%= title %>">
+          </div> <!-- End note_title -->
+          <div id="note_content">
+            <textarea id='editArea' onkeyup="auto_grow(this);">
+              <%= content %>
+            </textarea>
+          </div> <!-- End note_content -->
+        </div> <!-- End content -->
+      </div> <!-- End wrapper -->
+
+      <script>
+        auto_grow(document.getElementById('editArea'));
+        addAutoSave();
+      </script>
+
+    </body>
+
+
+
+</html>

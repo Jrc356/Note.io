@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <script>
+    if (sessionStorage.getItem('token')){
+      window.location = '/home';
+    } else {
+      window.location = '/login';
+    }
+  
+  </script>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Note.io - Home</title>
+    
+    <!-- CSS -->
+    <link rel='stylesheet' type='text/css' href="index.css">
+    <!-- End CSS -->
+
+    <!-- Scripts -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous">
+    </script>
+    <script src="index.js"></script>
+    <!-- End Scripts -->
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <div id="header">
+        <ul id="navbar">
+          <li class="nav_item"><a href="/logout">Logout</a></li>
+          <li class="nav_item"><a href="/newNote">New Note</a></li>
+          <li class="nav_item"><a href="/home">Home</a></li>
+        </ul> <!-- End navbar -->
+      </div> <!-- End header -->
+      <div id="content">
+        <table id="notes">
+          <thead class="notes_header" align="left">
+            <tr>
+              <th class="notes_item notes_title_header"><b>Title</b></th>
+              <th class="notes_item snippet"><b>Snippet</b></th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+
+        </table>
+      </div> <!-- End content -->
+    </div> <!-- End wrapper -->
+
+    <script>
+      getNotes();
+    </script>
+  </body>
+
+</html>

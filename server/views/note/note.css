@@ -1,0 +1,89 @@
+
+/* 
+COLORS:
+PRIMARY: #ececec
+SECONDAY: #9fd3c7
+TERTIARY: #385170
+QUINTARY: #142d4c
+*/
+
+/* End Table */
+
+/* Nav */
+#navbar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #142d4c;
+  border-bottom: 1px solid #385170;
+}
+
+.nav_item {
+  float: right;
+  border-left: 1px solid #385170;
+}
+
+.nav_item a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.nav_item a:hover {
+  background-color: #385170;
+}
+
+/* End Nav */
+
+/* Content Header */
+#note_title {
+  color: #ececec;
+  background-color: #385170;
+  margin: 0;
+  padding: 0;
+}
+
+#note_title input{
+  background-color: #385170;
+  color: #ececec;
+  border: none;
+  font-size: 26px;
+}
+
+#note_status {
+  color: #ececec;
+  background-color: #385170;
+}
+
+#note_status p{
+  font-size: 12px;
+  margin: 0;
+}
+
+#content_header{
+  background-color: #385170;
+  color: #ececec;
+  margin: 0;
+  padding: 0;
+}
+
+/* End Content Header */
+
+/* Textarea */
+
+textarea {
+  margin: 0;
+  padding: 0;
+  resize: none;
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  overflow: auto;
+  background-color: #ececec;
+
+}
+
+/* End Textarea */

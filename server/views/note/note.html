@@ -28,14 +28,14 @@
           </ul> <!-- End navbar -->
         </div> <!-- End header -->
         <div id="content">
-          <div id="note_title">
-            <input id="title" type="text" value="<%= title %>">
-          </div> <!-- End note_title -->
           <div id="note_status">
             <p id="status" align='right'>
               Changes Saved
             </p>
           </div> <!-- End status -->
+          <div id="note_title">
+            <input id="title" type="text" value="<%= title %>">
+          </div> <!-- End note_title -->
           <div id="note_content">
             <textarea id='editArea' onkeyup="auto_grow(this);">
               <%= content %>

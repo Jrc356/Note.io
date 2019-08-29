@@ -40,7 +40,7 @@ function genToken() {
 	for (i=0; i < 225; i++) {
 		token = token + chars[Math.floor(Math.random() * 92) - 1];
 	}
-	
+
 	return token
 }
 
@@ -64,15 +64,6 @@ function isAuthenticated(token) {
 		}
 		});
 }
-
-
-
-app.use(express.static("."));
-app.listen(3000, function() {
-	console.log("Server started.")
-	console.log(genToken())
-});
-
 
 app.post("/auth", function(req, res) {
 	////Auth
@@ -143,33 +134,51 @@ app.get("/notes", function(req,res) {
 	//all info from notes
 	//list of notes under key "data"
 	
-	//Setting up token and query variables
-	var tokenValue = req.headers.token;
-	var notesQuery = '';
-	//var noteQuery = <NOTESQUERY> using 
+	res.send({data: [
+		{
+			id: 'ascjub',
+			title: 'ajdsvre',
+			content: 'iuvbaiusbviubariuevbiursbvkjsbdfbkjvnfadkjgvhauikervhiureabvn'
+		},
+		{
+			id: 'breq',
+			title: 'zgre',
+			content: 'adskbjvkafbndvknfdaikubvhioudhsbfiuhadkfhbvkjanvskiu hdiouvhkdsahkfzyekufhbaiuebcviua eiuahgfkugh kuaku gkuzdhf vkuahkuhf aikg fjkgakjhkaj gfja gjkhea gjkl aelfgjaegfjk lagjkfl '
+		},
+		{
+			id: 'avurhbvaurhgb',
+			title: 'afshvueikrav',
+			content: 'adsfagreagaeg'
+		}
+	]});
 
-	//Querying for token
-	if (isAuthenticated(tokenValue) == False) {
-		console.log("Auth Failed");
-		res.status(403);
-		res.end();
-	}
+	// //Setting up token and query variables
+	// var tokenValue = req.headers.token;
+	// var notesQuery = '';
+	// //var noteQuery = <NOTESQUERY> using 
+
+	// //Querying for token
+	// if (isAuthenticated(tokenValue) == False) {
+	// 	console.log("Auth Failed");
+	// 	res.status(403);
+	// 	res.end();
+	// }
 	
-	//Querying for the notes from the database
-	con.query(noteQuery,
-		function(err,rows,fields){
-		if (err) {
-			console.log('Error during processing.');
-			console.log(err);
-		}
-		else {
-			console.log('Obtained a response.');
-			repsonseObj.notes = rows;
-			responseObj.message = 'Successfully gained a response.';
-			res.write(responseObj);
-			res.end();
-		}
-		});
+	// //Querying for the notes from the database
+	// con.query(noteQuery,
+	// 	function(err,rows,fields){
+	// 	if (err) {
+	// 		console.log('Error during processing.');
+	// 		console.log(err);
+	// 	}
+	// 	else {
+	// 		console.log('Obtained a response.');
+	// 		repsonseObj.notes = rows;
+	// 		responseObj.message = 'Successfully gained a response.';
+	// 		res.write(responseObj);
+	// 		res.end();
+	// 	}
+	// 	});
 });
 
 app.get('/note', (req, res) => {

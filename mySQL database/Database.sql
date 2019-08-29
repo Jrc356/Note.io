@@ -2,6 +2,10 @@ DROP DATABASE Notes;
 CREATE DATABASE Notes;
 USE Notes;
 
+CREATE USER IF NOT EXISTS 'noteio'@'localhost' IDENTIFIED BY 'noteio!';
+GRANT ALL PRIVILEGES ON Notes.* TO 'noteio'@'localhost';
+FLUSH PRIVILEGES;
+
 CREATE TABLE userTable(
 	userID int NOT NULL AUTO_INCREMENT,
 	userName varchar(225),

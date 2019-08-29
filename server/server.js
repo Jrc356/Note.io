@@ -1,6 +1,7 @@
 //Requirements
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 require('dotenv').config()
 
 const app = express();
@@ -9,6 +10,8 @@ app.use(express.static('./views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
 const mysql = require('mysql');
 const con = mysql.createConnection({
@@ -35,7 +38,7 @@ function genToken() {
 }
 
 function isAuthenticated(token) {
-
+	return true;
 }
 
 app.post("/auth", function(req, res) {
@@ -203,12 +206,21 @@ app.get('/note', (req, res) => {
 })
 
 
-app.get("/save", function(req,res) {
-	//Please note this is just a temp placeholder, probably will be a post request to the api
-	//Also, let me know of a better name for this process
+app.post("/save", function(req,res) {
+
+	const { token } = req.headers;
+	if (!isAuthenticated(token)) {
+		res.status(403).send();
+		return;
+	}
+
+	const id = req.body.id;
+	const title = req.body.title;
+	const content = req.body.content;
+	console.log(`Saving note with id ${id}`);
 	
-	////Save
-	//sends update to db
+	//TODO add insert query
+	res.send({status: 'ok'});
 	//token in header
 	
 	

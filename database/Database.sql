@@ -1,4 +1,4 @@
-DROP IF EXISTS DATABASE Notes;
+DROP DATABASE IF EXISTS Notes;
 CREATE DATABASE Notes;
 USE Notes;
 
@@ -21,10 +21,10 @@ VALUES ("user1","user1@notes.io","default1");
 INSERT INTO userTable(userName, userEmail, userPassword)
 VALUES ("user2","user2@notes.io","default2");
 
-INSERT INTO userTable(userID, userName, userEmail, userPassword)
+INSERT INTO userTable(userName, userEmail, userPassword)
 VALUES ("user3","user3@notes.io","default3");
 
-INSERT INTO userTable(userID, userName, userEmail, userPassword)
+INSERT INTO userTable(userName, userEmail, userPassword)
 VALUES ("user4","user4@notes.io","default4");
 
 
@@ -68,8 +68,8 @@ CREATE TABLE userToken(
 	tokenID int NOT NULL AUTO_INCREMENT,
 	tokenStr varchar(225),
 	
-	PRIMARY KEY (tokenID),
-)
+	PRIMARY KEY (tokenID)
+);
 
 
 

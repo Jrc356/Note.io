@@ -70,7 +70,7 @@ app.post("/auth", function(req, res) {
 	//message in json
 	
 	//Setting up the token response and query for authentication and token reserve
-	var authObj = { 'token' : genToken(), 'message' : '' };
+	var authObj = { 'token' : '', 'message' : '' };
 	var userCorrect = 0;
 	var authQuery = '';
 	//var authQuery = <AUTHQUERY> with req.query.userName
@@ -113,6 +113,7 @@ app.post("/auth", function(req, res) {
 			else {
 				console.log('Successfully inserted rows');
 				authObj.message = 'Login was successful.';
+				authObj.token = getToken() 
 				res.write(authObj);
 				res.redirect('http://localhost:3000/Home')
 				res.end();
@@ -131,7 +132,7 @@ app.get("/notes", function(req,res) {
 	//Setting up token and query variables
 	var tokenValue = req.headers.token;
 	var notesQuery = '';
-	//var noteQuery = <NOTESQUERY> using 
+	//var noteQuery = <NOTESQUERY> using userid
 
 	//Querying for token
 	if (isauthenticated(tokenValue) == False) {
@@ -149,9 +150,7 @@ app.get("/notes", function(req,res) {
 		}
 		else {
 			console.log('Obtained a response.');
-			repsonseObj.notes = rows;
-			responseObj.message = 'Successfully gained a response.';
-			res.write(responseObj);
+			res.write(rows);
 			res.end();
 		}
 		});
@@ -165,6 +164,37 @@ app.get("/save", function(req,res) {
 	//sends update to db
 	//token in header
 	
+	var tokenValue = req.headers.token;
+	var saveQuery = '';
+	//var saveQuery = 'QUERY TO DB TO SAVE req.query.note, req.query.headline USING req.query.id';	
+	
+	//Quering for token
+	if (isauthenticated(tokenValue) == False) {
+		console.log("Auth Failed");
+		res.status(403);
+		res.end();
+	}
+	
+	con.query(saveQuery,
+		function(err,result) {
+		if (err) {
+			console.log('Error during insertion.');
+			console.log(err);
+			res.status(500);
+			res.end();
+		}
+		else {
+			res.status(200);
+			res.end();
+		}
+	});
+	
+});
+
+app.post("/adduser", function(req,res) {
+	////AddUser
+	//Sends user info to db
+	//redirect to login
 	
 	
 });

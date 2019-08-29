@@ -2,7 +2,7 @@
 "getTokenByID" : "select * from userToken where tokenID = '{tokenID}'",
 "getTokenByStr" : "select * from userToken where tokenStr = '{tokenStr}'",
 "addToken" : "INSERT INTO userToken(userID, tokenStr) VALUES ('{tokenStr}')",
-"deleteTokenID" : "DELETE FROM userToken where tokenID = '{tokenID}'",
+"deleteTokenStr" : "DELETE FROM userToken where tokenStr = '{tokenStr}'",
 
 
 "addUser" : "INSERT INTO userTable(userName, userPassword) VALUES ('{userName}','{userPassword}')",

@@ -60,10 +60,10 @@ function isAuthenticated(token) {
 		}
 		else {
 			if (rows.size == 0) {
-				return False;	
+				return false;	
 			}
 			else {
-				return True;	
+				return true;	
 			}
 		}
 		});
@@ -143,7 +143,7 @@ app.get("/notes", function(req,res) {
 	//var noteQuery = <NOTESQUERY> using userid
 
 	//Querying for token
-	if (isauthenticated(tokenValue) == False) {
+	if (isAuthenticated(tokenValue) == false) {
 		console.log("Auth Failed");
 		res.status(403);
 		res.end();
@@ -214,7 +214,7 @@ app.post("/save", function(req,res) {
 	//var saveQuery = 'QUERY TO DB TO SAVE req.query.note, req.query.headline USING req.query.id';	
 	
 	//Quering for token
-	if (isauthenticated(tokenValue) == False) {
+	if (isAuthenticated(tokenValue) == false) {
 		console.log("Auth Failed");
 		res.status(403);
 		res.end();

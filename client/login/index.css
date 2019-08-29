@@ -1,0 +1,47 @@
+/* 
+COLORS:
+PRIMARY: #ececec
+SECONDAY: #9fd3c7
+TERTIARY: #385170
+QUINTARY: #142d4c
+*/
+
+body {
+    background: url(https://www.publicdomainpictures.net/pictures/180000/velka/paper-and-a-pencil.jpg);
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.3) 100%), url(https://www.publicdomainpictures.net/pictures/180000/velka/paper-and-a-pencil.jpg);
+}
+
+#wrapper {
+    padding: 75px 0;
+    text-align: center;
+}
+
+#site_title {
+    font-size: 72px;
+    color: #ececec;
+    text-shadow:
+        3px 3px 0 #000,
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+input {
+    padding: 10px;
+    width: 15%;
+}
+
+#LoginButton {
+    background-color: #385170;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+#LoginButton:hover {
+    background-color: #142d4c;
+}

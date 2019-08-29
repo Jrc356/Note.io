@@ -149,7 +149,7 @@ app.get("/notes", function(req,res) {
 	//var noteQuery = <NOTESQUERY> using 
 
 	//Querying for token
-	if (isauthenticated(tokenValue) == False) {
+	if (isAuthenticated(tokenValue) == False) {
 		console.log("Auth Failed");
 		res.status(403);
 		res.end();

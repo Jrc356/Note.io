@@ -34,11 +34,20 @@ function genToken() {
 	return "zza67n&dhs09jj12#"
 }
 
+function isAuthenticated(token) {
+
+}
+
 app.post("/auth", function(req, res) {
 	////Auth
 	//token for header
 	//message in json
 	
+	// const { token } = req.headers;
+	// if (isAuthenticated(token)){
+	// 	res.status(403).send();
+	// }
+
 	//Setting up the token response and query for authentication and token reserve
 	var authObj = { 'user' : req.query.userName, 'token' : genToken(), 'message' : '' };
 	var userCorrect = 0;

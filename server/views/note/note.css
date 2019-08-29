@@ -42,26 +42,24 @@ QUINTARY: #142d4c
 #note_title {
   color: #ececec;
   background-color: #385170;
-  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #note_title input{
   background-color: #385170;
   color: #ececec;
   border: none;
-  margin: 0;
-  padding: 30px 25px;
-  font-size: 32px;
+  font-size: 26px;
 }
 
 #note_status {
   color: #ececec;
   background-color: #385170;
-  width: 100%;
 }
 
 #note_status p{
-  font-size: 16px;
+  font-size: 12px;
   margin: 0;
 }
 

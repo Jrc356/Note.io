@@ -2,10 +2,37 @@ var timeout;
 
 var id = getParameterByName('id');
 
+function getToken() {
+  return sessionStorage.getItem('token');
+}
+
 function saveNote() {
   console.log(new Date() + " Saving note...");
-  console.log("TEXT CHANGED");
-  console.log($('#editArea').val());
+  
+  const id = getParameterByName('id');
+  console.log(id);
+
+  $.ajax('http://localhost:3000/save', {
+    method: "POST",
+    headers: {
+      "token": getToken(),
+    },
+    data: {
+      "id": id,
+      "content": $('#editArea').val(),
+      "title": $('#title').val()
+    },
+    dataType:'json',
+    success: function(data){
+      console.log('Note Saved');
+      $('#status').attr('class', 'saved').text('Changes Saved');
+    },
+    error: function(err){
+      console.log("error");
+      console.log(err);
+      $('#status').attr('class', 'error').text('Error Saving Changes');
+    }
+  });
 }
 
 function auto_grow(element) {
@@ -31,10 +58,7 @@ function addAutoSave(){
     if (timeout) clearTimeout(timeout);
 
     // Set timer that will save comment when it fires.
-    timeout = setTimeout(function () {
-        saveNote();
-        $('#status').attr('class', 'saved').text('Changes Saved');
-      }, 750);
+    timeout = setTimeout(saveNote, 750);
   });
 
   $('#editArea').keyup(function () {
@@ -44,10 +68,7 @@ function addAutoSave(){
     if (timeout) clearTimeout(timeout);
 
     // Set timer that will save comment when it fires.
-    timeout = setTimeout(function () {
-        saveNote();
-        $('#status').attr('class', 'saved').text('Changes Saved');
-      }, 750);
+    timeout = setTimeout(saveNote, 750);
   });
 
   $('#title').keypress(function () {
@@ -57,10 +78,7 @@ function addAutoSave(){
     if (timeout) clearTimeout(timeout);
 
     // Set timer that will save comment when it fires.
-    timeout = setTimeout(function () {
-        saveNote();
-        $('#status').attr('class', 'saved').text('Changes Saved');
-      }, 750);
+    timeout = setTimeout(saveNote, 750);
   });
 
   $('#title').keyup(function () {
@@ -70,9 +88,6 @@ function addAutoSave(){
     if (timeout) clearTimeout(timeout);
 
     // Set timer that will save comment when it fires.
-    timeout = setTimeout(function () {
-        saveNote();
-        $('#status').attr('class', 'saved').text('Changes Saved');
-      }, 750);
+    timeout = setTimeout(saveNote, 750);
   });
 }

@@ -135,77 +135,6 @@ app.get("/notes", function(req,res) {
 	//all info from notes
 	//list of notes under key "data"
 	
-<<<<<<< HEAD
-	res.send({data: [
-		{
-			id: 'ascjub',
-			title: 'ajdsvre',
-			content: 'iuvbaiusbviubariuevbiursbvkjsbdfbkjvnfadkjgvhauikervhiureabvn'
-		},
-		{
-			id: 'breq',
-			title: 'zgre',
-			content: 'adskbjvkafbndvknfdaikubvhioudhsbfiuhadkfhbvkjanvskiu hdiouvhkdsahkfzyekufhbaiuebcviua eiuahgfkugh kuaku gkuzdhf vkuahkuhf aikg fjkgakjhkaj gfja gjkhea gjkl aelfgjaegfjk lagjkfl '
-		},
-		{
-			id: 'avurhbvaurhgb',
-			title: 'afshvueikrav',
-			content: 'adsfagreagaeg'
-		}
-	]});
-
-	// //Setting up token and query variables
-	// var tokenValue = req.headers.token;
-	// var notesQuery = '';
-	// //var noteQuery = <NOTESQUERY> using 
-
-	// //Querying for token
-	// if (isAuthenticated(tokenValue) == False) {
-	// 	console.log("Auth Failed");
-	// 	res.status(403);
-	// 	res.end();
-	// }
-	
-	// //Querying for the notes from the database
-	// con.query(noteQuery,
-	// 	function(err,rows,fields){
-	// 	if (err) {
-	// 		console.log('Error during processing.');
-	// 		console.log(err);
-	// 	}
-	// 	else {
-	// 		console.log('Obtained a response.');
-	// 		repsonseObj.notes = rows;
-	// 		responseObj.message = 'Successfully gained a response.';
-	// 		res.write(responseObj);
-	// 		res.end();
-	// 	}
-	// 	});
-});
-
-app.get('/note', (req, res) => {
-	const { id } = req.query;
-
-	console.log(`Received request for note with id "${id}"`);
-
-	//TODO Implement query note by id here
-	//TODO remove dummy data
-	data = {data: [
-		{
-			id: 'ascjub',
-			title: 'ajdsvre',
-			content: 'iuvbaiusbviubariuevbiursbvkjsbdfbkjvnfadkjgvhauikervhiureabvn'
-		},
-		{
-			id: 'breq',
-			title: 'zgre',
-			content: 'adskbjvkafbndvknfdaikubvhioudhsbfiuhadkfhbvkjanvskiu hdiouvhkdsahkfzyekufhbaiuebcviua eiuahgfkugh kuaku gkuzdhf vkuahkuhf aikg fjkgakjhkaj gfja gjkhea gjkl aelfgjaegfjk lagjkfl '
-		},
-		{
-			id: 'avurhbvaurhgb',
-			title: 'afshvueikrav',
-			content: 'adsfagreagaeg'
-=======
 	//Setting up token and query variables
 	var tokenValue = req.headers.token;
 	var notesQuery = '';
@@ -229,9 +158,8 @@ app.get('/note', (req, res) => {
 			console.log('Obtained a response.');
 			res.write(rows);
 			res.end();
->>>>>>> lpc37
 		}
-	]}
+	});
 
 
 	const note = ((id) => {
@@ -294,6 +222,46 @@ app.post("/save", function(req,res) {
 	});
 	
 });
+
+
+app.get('/note', (req, res) => {
+	const { id } = req.query;
+
+	data = {data: [
+		{
+			id: 'ascjub',
+			title: 'ajdsvre',
+			content: 'iuvbaiusbviubariuevbiursbvkjsbdfbkjvnfadkjgvhauikervhiureabvn'
+		},
+		{
+			id: 'breq',
+			title: 'zgre',
+			content: 'adskbjvkafbndvknfdaikubvhioudhsbfiuhadkfhbvkjanvskiu hdiouvhkdsahkfzyekufhbaiuebcviua eiuahgfkugh kuaku gkuzdhf vkuahkuhf aikg fjkgakjhkaj gfja gjkhea gjkl aelfgjaegfjk lagjkfl '
+		},
+		{
+			id: 'avurhbvaurhgb',
+			title: 'afshvueikrav',
+			content: 'adsfagreagaeg'
+		}
+	]}
+
+
+	const note = ((id) => {
+		n = null;
+		data.data.forEach(nt => {
+			if (nt.id === id) {
+				n = nt;
+			}
+		});
+
+		return n;
+	})(id);
+
+	const {title, content} = note;
+
+	res.render('note/note.html', {title, content});
+})
+
 
 app.post("/adduser", function(req,res) {
 	////AddUser

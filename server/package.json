@@ -18,6 +18,8 @@
   "homepage": "https://gitlab.cci.drexel.edu/jrc356/note.io#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "html": "^1.0.0"
   }
 }

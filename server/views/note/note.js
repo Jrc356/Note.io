@@ -10,7 +10,6 @@ function saveNote() {
   console.log(new Date() + " Saving note...");
   
   const id = getParameterByName('id');
-  console.log(id);
 
   $.ajax('http://localhost:3000/save', {
     method: "POST",

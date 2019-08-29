@@ -9,23 +9,22 @@ FLUSH PRIVILEGES;
 CREATE TABLE userTable(
 	userID int NOT NULL AUTO_INCREMENT,
 	userName varchar(225),
-	userEmail varchar(225),
 	userPassword varchar(225),
 	
 	PRIMARY KEY (userID)
 );
 
-INSERT INTO userTable(userName, userEmail, userPassword)
-VALUES ("user1","user1@notes.io","default1");
+INSERT INTO userTable(userName, userPassword)
+VALUES ("user1", "default1");
 
-INSERT INTO userTable(userName, userEmail, userPassword)
-VALUES ("user2","user2@notes.io","default2");
+INSERT INTO userTable(userName, userPassword)
+VALUES ("user2","default2");
 
-INSERT INTO userTable(userName, userEmail, userPassword)
-VALUES ("user3","user3@notes.io","default3");
+INSERT INTO userTable(userName, userPassword)
+VALUES ("user3", "default3");
 
-INSERT INTO userTable(userName, userEmail, userPassword)
-VALUES ("user4","user4@notes.io","default4");
+INSERT INTO userTable(userName, userPassword)
+VALUES ("user4", "default4");
 
 
 CREATE TABLE userNotes(

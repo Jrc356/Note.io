@@ -4,6 +4,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config()
 
+const queries = require('../mySQL database/databaseQueries.json')
+
+
 const app = express();
 app.use(express.static('../client'));
 app.use(express.static('./views'));
@@ -124,10 +127,8 @@ app.post("/auth", function(req, res) {
 				res.redirect('http://localhost:3000/home')
 				res.end();
 			}
-			});
+		});
 	}
-	
-	
 });
 
 app.get("/notes", function(req,res) {
@@ -178,6 +179,17 @@ app.get("/notes", function(req,res) {
 	res.render('note/note.html', {title, content});
 })
 
+app.get('/logout', (req, res) => {
+	const { token } = req.headers;
+	if (!isAuthenticated(token)) {
+		res.status(403).send();
+		return;
+	}
+
+	//TODO remove token
+
+	res.send({status: "OK"});
+})
 
 app.post("/save", function(req,res) {
 

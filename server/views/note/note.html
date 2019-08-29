@@ -37,7 +37,7 @@
             </p>
           </div> <!-- End status -->
           <div id="note_content">
-            <textarea id='editArea' onchange="console.log('BING');">
+            <textarea id='editArea' onkeyup="auto_grow(this);">
               <%= content %>
             </textarea>
           </div> <!-- End note_content -->
@@ -45,6 +45,7 @@
       </div> <!-- End wrapper -->
 
       <script>
+        auto_grow(document.getElementById('editArea'));
         addAutoSave();
       </script>
 

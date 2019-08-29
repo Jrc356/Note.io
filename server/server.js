@@ -6,8 +6,7 @@ require('dotenv').config()
 
 const queries = require('../database/databaseQueries.json')
 
-// queries.getTokenByID.replace('{tokenID', tokenID);
-
+//! APP CONFIG
 const app = express();
 app.use(express.static('../client'));
 app.use(express.static('./views'));
@@ -16,13 +15,15 @@ app.set('view engine', 'html');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+//! END APP CONFIG
 
+//! DB SETUP
 const mysql = require('mysql');
 const con = mysql.createConnection({
 	host: process.env.DB_HOST,
 	user: process.env.DB_USER,
 	password: process.env.DB_PASSWORD,
-	database: process.env.DB_ENV
+	database: process.env.DB_NAME
 });
 
 con.connect(function(err) {
@@ -35,24 +36,38 @@ con.connect(function(err) {
 	}
 	});
 
-//Function that generates a key for the user
-function genToken() {
-	var token = "";
-	var chars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()[]\;',./{}|:<>?`~-=_+";
-	var charsLen = chars.length;
+//! END DB SETUP
+
+
+//! FUNCTIONS
+/**
+ * Generates random string of length TOKEN_LENGTH defined in
+ * the .env file. This is used for client authentication
+ *
+ * @returns token string
+ */
+function generateToken() {
 	
-	for (i=0; i < 225; i++) {
-		token = token + chars[Math.floor(Math.random() * 92) - 1];
+	let token = "";
+	const chars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()[]\;',./{}|:<>?`~-=_+";
+	
+
+	for (i=0; i < process.env.TOKEN_LENGTH; i++) {
+		token = token + chars[Math.floor(Math.random() * chars.length) - 1];
 	}
 
 	return token
 }
 
-//Function to check if a token exists in the database
+
+/**
+ * Queries database for token to check if token is valid
+ *
+ * @param {string} token
+ * @returns {boolean} if token is real
+ */
 function isAuthenticated(token) {
-	var tokenQuery = "QUERY FOR TOKEN token";
-	
-	con.query(tokenQuery,
+	con.query("QUERY FOR TOKEN token",
 		function(err,rows,fields) {
 		if (err) {
 			console.log('Error during processing.');
@@ -66,81 +81,95 @@ function isAuthenticated(token) {
 				return true;	
 			}
 		}
-		});
+	});
 }
 
-app.post("/auth", function(req, res) {
-	////Auth
-	//token for header
-	//message in json
-	
-	// const { token } = req.headers;
-	// if (isAuthenticated(token)){
-	// 	res.status(403).send();
-	// }
+/**
+ * Generates and inserts a token into the database
+ * then returns that token
+ *
+ * @returns {object} an object containing the token created and inserted
+ */
+function createToken(){
+	let token = generateToken();
 
-	//Setting up the token response and query for authentication and token reserve
-	var authObj = { 'token' : '', 'message' : '' };
-	var userCorrect = 0;
-	var authQuery = '';
-	//var authQuery = <AUTHQUERY> with req.query.userName
-	var tokenQuery = '';
-	//var tokenQuery = <TOKENQUERY> using authObj.token and authObj.userName
-	
+	con.query("insert token query", (err, result) => {
+		if(err){
+			console.log(err);
+			token = "ERROR"
+		}
+	})
+
+	return {token}
+}
+//! END FUNCTIONS
+
+//! ROUTES
+//? LOGIN/LOGOUT
+app.post("/auth", function(req, res) {
+	const authObj = { 'token' : '', 'message' : '' };
+	const { username, password } = req.body;
 	//Querying for username
-	con.query(authQuery,
+	con.query("get username and password",
 		function(err,rows,fields) {
 		if (err) {
 			console.log('Error during processing.');
 			console.log(err);
-		}
-		else {
+		} else {
 			console.log("Obtained a response.")
 			if (rows.size == 0) {
 				authObj.message = 'Username was incorrect.';
-				res.write(authObj);
-				res.end();
-			}
-			else if (rows[0].userName != req.query.userName) {
+				res.send(authObj);
+			} else if (rows[0].userPassword != password) {
 				authObj.message = 'Password was incorrect.';
-				res.write(authObj);
-				res.end();
-			}
-			else {
-				userCorrect = 1;
+				res.send(authObj);
+			} else {
+				res.send(createToken());
 			}
 		}
 	});
-	
-	//Redirecting and sending information back to the user
-	if (userConnect == 1) {
-		con.query(tokenQuery, 
-			function(err, result) {
-			if (err) {
-				console.log('Error during insertion.');
-				console.log(err);	
-			}
-			else {
-				console.log('Successfully inserted rows');
-				authObj.message = 'Login was successful.';
-				authObj.token = getToken() 
-				res.write(authObj);
-				res.redirect('http://localhost:3000/home')
-				res.end();
-			}
-		});
-	}
 });
 
+app.post("/adduser", function(req,res) {
+	console.log("adding user");
+});
+
+
+app.get('/logout', (req, res) => {
+	const { token } = req.headers;
+	if (!isAuthenticated(token)) {
+		res.status(403).send();
+		return;
+	}
+
+	con.query("delete token query", (err, result) => {
+		if(err) {
+			console.log(err);
+		} else {
+			res.send({status: "OK"});
+		}
+	});
+})
+//? END LOGIN/LOGOUT
+
+//? NOTES
+app.get('/note', (req, res) => {
+	const { id } = req.query;
+
+	con.query("get note by id query", (err, result) => {
+		if (err) { 
+			console.log(err);
+			res.render('note/note.html', {title:"ERROR", content: "ERROR"});
+			return
+		} else {
+			const {title, content} = result;
+			res.render('note/note.html', {title, content});
+		}
+	});
+})
+
 app.get("/notes", function(req,res) {
-	////Notes
-	//all info from notes
-	//list of notes under key "data"
-	
-	//Setting up token and query variables
-	var tokenValue = req.headers.token;
-	var notesQuery = '';
-	//var noteQuery = <NOTESQUERY> using userid
+	const tokenValue = req.headers.token;
 
 	//Querying for token
 	if (isAuthenticated(tokenValue) == false) {
@@ -150,7 +179,7 @@ app.get("/notes", function(req,res) {
 	}
 	
 	//Querying for the notes from the database
-	con.query(noteQuery,
+	con.query("get all notes for user query",
 		function(err,rows,fields){
 		if (err) {
 			console.log('Error during processing.');
@@ -158,42 +187,12 @@ app.get("/notes", function(req,res) {
 		}
 		else {
 			console.log('Obtained a response.');
-			res.write(rows);
-			res.end();
+			res.send(rows);
 		}
 	});
-
-
-	const note = ((id) => {
-		n = null;
-		data.data.forEach(nt => {
-			if (nt.id === id) {
-				n = nt;
-			}
-		});
-
-		return n;
-	})(id);
-
-	const {title, content} = note;
-
-	res.render('note/note.html', {title, content});
-})
-
-app.get('/logout', (req, res) => {
-	const { token } = req.headers;
-	if (!isAuthenticated(token)) {
-		res.status(403).send();
-		return;
-	}
-
-	//TODO remove token
-
-	res.send({status: "OK"});
 })
 
 app.post("/save", function(req,res) {
-
 	const { token } = req.headers;
 	if (!isAuthenticated(token)) {
 		res.status(403).send();
@@ -207,11 +206,8 @@ app.post("/save", function(req,res) {
 	
 	//TODO add insert query
 	res.send({status: 'ok'});
-	//token in header
-	
-	var tokenValue = req.headers.token;
-	var saveQuery = '';
-	//var saveQuery = 'QUERY TO DB TO SAVE req.query.note, req.query.headline USING req.query.id';	
+
+	const tokenValue = req.headers.token;
 	
 	//Quering for token
 	if (isAuthenticated(tokenValue) == false) {
@@ -220,70 +216,21 @@ app.post("/save", function(req,res) {
 		res.end();
 	}
 	
-	con.query(saveQuery,
+	con.query("saveQuery",
 		function(err,result) {
 		if (err) {
 			console.log('Error during insertion.');
 			console.log(err);
-			res.status(500);
-			res.end();
+			res.status(500).send();
 		}
 		else {
-			res.status(200);
-			res.end();
+			res.status(200).send();
 		}
 	});
 	
 });
 
-
-app.get('/note', (req, res) => {
-	const { id } = req.query;
-
-	data = {data: [
-		{
-			id: 'ascjub',
-			title: 'ajdsvre',
-			content: 'iuvbaiusbviubariuevbiursbvkjsbdfbkjvnfadkjgvhauikervhiureabvn'
-		},
-		{
-			id: 'breq',
-			title: 'zgre',
-			content: 'adskbjvkafbndvknfdaikubvhioudhsbfiuhadkfhbvkjanvskiu hdiouvhkdsahkfzyekufhbaiuebcviua eiuahgfkugh kuaku gkuzdhf vkuahkuhf aikg fjkgakjhkaj gfja gjkhea gjkl aelfgjaegfjk lagjkfl '
-		},
-		{
-			id: 'avurhbvaurhgb',
-			title: 'afshvueikrav',
-			content: 'adsfagreagaeg'
-		}
-	]}
-
-
-	const note = ((id) => {
-		n = null;
-		data.data.forEach(nt => {
-			if (nt.id === id) {
-				n = nt;
-			}
-		});
-
-		return n;
-	})(id);
-
-	const {title, content} = note;
-
-	res.render('note/note.html', {title, content});
-})
-
-
-app.post("/adduser", function(req,res) {
-	////AddUser
-	//Sends user info to db
-	//redirect to login
-	
-	
-});
-
-//	const {title, content} = note;
+//? END NOTES
+//! END ROUTES
 
 app.listen(3000, () => {console.log("listening on port 3000")});

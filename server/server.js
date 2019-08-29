@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config()
 
-const queries = require('../mySQL database/databaseQueries.json')
+const queries = require('../database/databaseQueries.json')
 
 // queries.getTokenByID.replace('{tokenID', tokenID);
 

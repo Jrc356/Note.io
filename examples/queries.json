@@ -1,8 +1,0 @@
-{
-  "GetTables":"SHOW tables;",
-  "GetTable":"SELECT * FROM {table};",
-  "GetStudents":"SELECT id, first_name, last_name FROM student;",
-  "GetTranscript": "SELECT student.id as student_id, student.first_name, student.last_name, grades.term, course.id as course_id, course.course_description, grades.grade FROM grades, student, course WHERE grades.student_id = '{studentid}' AND grades.term = '{term}' AND grades.student_id = student.id AND grades.course_id = course.id;",
-  "GetTerms": "SELECT DISTINCT term FROM grades;",
-  "InsertStudent": "INSERT INTO student (id, first_name, last_name, dob, major) VALUES('{id}', '{first_name}', '{last_name}', STR_TO_DATE('{dob}', '%d-%m-%Y'), '{major}');"
-}

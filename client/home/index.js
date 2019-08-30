@@ -24,8 +24,8 @@ function updateNotesTable(notes) {
 
   notes.forEach((note) => {
     const id = note.notesID;
-    const title = note.Title;
-    const content = note.Content
+    const title = note.Title || "";
+    const content = note.Content || "";
     const row = table.insertRow(-1);
     row.classList = "note clickable-row";
     row.setAttribute('data-href', `/note?id=${id}&token=${sessionStorage.getItem('token')}`);
@@ -47,4 +47,16 @@ function setClickables() {
   $(".clickable-row").click(function() {
       window.location = $(this).data("href");
   });
+}
+
+function setTokens() {
+  let href = $("#newNote").attr('href');
+  $("#newNote").attr('href', `${href}&token=${getToken()}`);
+
+  href = $('#logout').attr('href');
+  $("#logout").attr('href', `${href}?token=${getToken()}`);
+  $('#logout').click(() => {
+    sessionStorage.removeItem('token');
+  })
+
 }

@@ -134,42 +134,53 @@ app.post("/auth", function(req, res) {
 	const { username, password } = req.body;
 
 	console.log(`Received auth request for username ${username}`);
-	con.query(queries.getUserByUserName.replace('{userName}', username),
-		function(err, rows) {
-		if (err) {
-			console.log('Error during processing.');
-			console.log(err);
-		} else {
-			console.log("Obtained a response.")
-			if (rows.size == 0) {
-				tokenObj.token = 'ERROR';
-			} else if (rows[0].userPassword != password) {
-				tokenObj.token = 'ERROR';
+	try {
+		con.query(queries.getUserByUserName.replace('{userName}', username),
+			function(err, rows) {
+			if (err) {
+				console.log('Error during processing.');
+				console.log(err);
 			} else {
-				tokenObj.token = createToken(username);
-			}
+				try {
+					console.log("Obtained a response.")
+					if (rows.size == 0) {
+						tokenObj.token = 'ERROR';
+					} else if (rows[0].userPassword != password) {
+						tokenObj.token = 'ERROR';
+					} else {
+						tokenObj.token = createToken(username);
+					}
 
-			res.send(tokenObj);
-		}
-	});
+					res.send(tokenObj);
+				} catch (err) {
+					res.sendStatus(500);
+				}
+			}
+		});
+	} catch (err) {
+		res.sendStatus(500);
+	}
 });
 
 app.post("/adduser", function(req,res) {
 	const { username, password } = req.body;
 
 	console.log(`adding user ${username}`);
-
-	con.query(
-		queries.addUser.replace('{userName}', username).replace('{userPassword}', password),
-		(err) => {
-			if(err) {
-				console.log(err);
-				res.status(500).send();
-			} else {
-				res.send({token: createToken(username)});
+	try {
+		con.query(
+			queries.addUser.replace('{userName}', username).replace('{userPassword}', password),
+			(err) => {
+				if(err) {
+					console.log(err);
+					res.status(500).send();
+				} else {
+					res.send({token: createToken(username)});
+				}
 			}
-		}
-	);
+		);
+	} catch (err) {
+		res.sendStatus(500);
+	}
 });
 
 
@@ -180,14 +191,18 @@ app.get('/logout', (req, res) => {
 			res.status(403).send();
 			return
 		} else {
-			con.query(queries.deleteTokenStr.replace('{tokenStr}', tokenValue), (err) => {
-				if(err) {
-					console.log(err);
-					res.status(500).send();
-				} else {
-					res.redirect(303, '/login/')
-				}
-			});
+			try {
+				con.query(queries.deleteTokenStr.replace('{tokenStr}', tokenValue), (err) => {
+					if(err) {
+						console.log(err);
+						res.status(500).send();
+					} else {
+						res.redirect(303, '/login/')
+					}
+				});
+			} catch (err) {
+				res.sendStatus(500);
+			}
 		}
 	});
 })
@@ -204,39 +219,50 @@ app.get('/note', (req, res) => {
 		} else {
 			if (id === "newNote") {
 				let user = '';
-				con.query(queries.getTokenByStr.replace('{tokenStr}', tokenValue), (err, result) => {
-					if (err){
-						console.log(err);
-						res.status(500).send();
-					} else {
-						user = result[0].userName;
-					}
-
-				
-					console.log("Creating new note!");
-					con.query(queries.addNote.replace('{userName}', user), (err, result) => {
-						if (err) {
+				try {
+					con.query(queries.getTokenByStr.replace('{tokenStr}', tokenValue), (err, result) => {
+						if (err){
 							console.log(err);
+							res.status(500).send();
 						} else {
-							console.log(result.insertId);
-							res.redirect(303, `/note/?id=${result.insertId}&token=${tokenValue}`);
+							user = result[0].userName;
+						}
+
+						console.log("Creating new note!");
+						try {
+							con.query(queries.addNote.replace('{userName}', user), (err, result) => {
+								if (err) {
+									console.log(err);
+								} else {
+									console.log(result.insertId);
+									res.redirect(303, `/note/?id=${result.insertId}&token=${tokenValue}`);
+								}
+							})
+						} catch (err) {
+							res.sendStatus(500);
 						}
 					})
-				})
+				} catch (err) {
+					res.sendStatus(500);
+				}
 			}
 
 			else {
-				con.query(queries.getNotesByNotesID.replace('{notesID}', id), (err, result) => {
-					if (err) { 
-						console.log(err);
-						res.render('note/note.html', {title:"ERROR", content: "ERROR"});
-					} else {
-						console.log(result);
-						const title = result[0].Title;
-						const content = result[0].Content;
-						res.render('note/note.html', {title, content});
-					}
-				})
+				try {
+					con.query(queries.getNotesByNotesID.replace('{notesID}', id), (err, result) => {
+						if (err) { 
+							console.log(err);
+							res.render('note/note.html', {title:"ERROR", content: "ERROR"});
+						} else {
+							console.log(result);
+							const title = result[0].Title;
+							const content = result[0].Content;
+							res.render('note/note.html', {title, content});
+						}
+					})
+				} catch (err) {
+					res.sendStatus(500);
+				}
 			}
 		}
 	})
@@ -250,27 +276,35 @@ app.get("/notes", function(req,res) {
 			res.status(403).send();
 			return
 		} else {
-			con.query(queries.getTokenByStr.replace('{tokenStr}', tokenValue), (err, result) => {
-				if (err){
-					console.log(err);
-					res.status(500).send();
-				} else {
-					user = result[0].userName;
-				}
-				console.log(`Retrieving notes for user ${user}`);
-			
-				con.query(queries.getNotesByUserName.replace('{userName}', user),
-					function(err, rows){
-					if (err) {
-						console.log('Error during processing.');
+			try {
+				con.query(queries.getTokenByStr.replace('{tokenStr}', tokenValue), (err, result) => {
+					if (err){
 						console.log(err);
+						res.status(500).send();
+					} else {
+						user = result[0].userName;
 					}
-					else {
-						console.log('Obtained a response.');
-						res.send(rows);
+					console.log(`Retrieving notes for user ${user}`);
+				
+					try {
+						con.query(queries.getNotesByUserName.replace('{userName}', user),
+							function(err, rows){
+							if (err) {
+								console.log('Error during processing.');
+								console.log(err);
+							}
+							else {
+								console.log('Obtained a response.');
+								res.send(rows);
+							}
+						});
+					} catch (err) {
+						res.sendStatus(500);
 					}
-				});
-			})
+				})
+			} catch (err) {
+				res.sendStatus(500);
+			}
 		}
 	});
 })
@@ -286,19 +320,22 @@ app.post("/save", function(req,res) {
 			const title = req.body.title;
 			const content = req.body.content;
 			console.log(`Saving note with id ${id}`);
-			
-			con.query(queries.updateNote.replace('{Title}', title).replace('{Content}', content).replace('{notesID}', id),
-				function(err) {
-				if (err) {
-					console.log('Error during insertion.');
-					console.log(err);
-					res.status(500).send();
-				}
-				else {
-					console.log("Note saved successfully");
-					res.sendStatus(200);
-				}
-			});
+			try {
+				con.query(queries.updateNote.replace('{Title}', title).replace('{Content}', content).replace('{notesID}', id),
+					function(err) {
+					if (err) {
+						console.log('Error during insertion.');
+						console.log(err);
+						res.status(500).send();
+					}
+					else {
+						console.log("Note saved successfully");
+						res.sendStatus(200);
+					}
+				});
+			} catch (err) {
+				res.sendStatus(500);
+			}
 		}
 	})
 });

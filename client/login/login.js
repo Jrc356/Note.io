@@ -4,19 +4,21 @@ function login(){
 	
 	$.ajax({
 		type: "POST",
-		url: URL,
-		dataType: "html",
-		success: function(msg) {
-			var json = msg
-			if (json.code=200) { //check if the cod is 200, which means it was sucessful, server sends back token, store token in session, then redirect to homepage
-			}
-			else {
-				//have server print back error message                    
-				document.getElementById("maindiv").innerHTML = msg;                
-			}
+		url: 'http://localhost:3000/auth',
+		data: {
+			username,
+			password
+		},
+		success: function(data) {                    
+			if(data.token === "ERROR") {
+				alert("Invalid Combination of Username and Password");
+			} else {
+				sessionStorage.setItem('token', data.token);
+				window.location = '/home';
+			}                
 		},    
 		error: function() {
-			alert("Invalid Combination of Username and Password");
+			alert("SOMETHING WENT WRONG");
 		}
 	});	
 }

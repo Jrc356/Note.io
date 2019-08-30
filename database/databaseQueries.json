@@ -1,13 +1,13 @@
 {
 "getTokenByID" : "select * from userToken where tokenID = '{tokenID}'",
 "getTokenByStr" : "select * from userToken where tokenStr = '{tokenStr}'",
-"addToken" : "INSERT INTO userToken(userID, tokenStr) VALUES ('{userID}', '{tokenStr}')",
+"addToken" : "INSERT INTO userToken(userName, tokenStr) VALUES ('{userName}', '{tokenStr}')",
 "deleteTokenStr" : "DELETE FROM userToken where tokenStr = '{tokenStr}'",
 
 
 "addUser" : "INSERT INTO userTable(userName, userPassword) VALUES ('{userName}','{userPassword}')",
-"getUserByUserID" : "select * from userTable where userName = '{userName}'",
-"getUserNotesByID" : "select * from userNotes where userName = '{userName}'",
+"getUserByUserName" : "select * from userTable where userName = '{userName}'",
+"getNotesByUserName" : "select * from userNotes where userName = '{userName}'",
 
 "getNotesByNotesID" : "select * from userNotes where notesID = '{notesID}'",
 "addNotes" : "INSERT INTO userNotes(Title, Content, userName) VALUES ('{Title}', '{Content}', '{userName}')",

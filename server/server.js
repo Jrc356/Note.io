@@ -9,9 +9,9 @@ const queries = require('../database/databaseQueries.json')
 //! APP CONFIG
 const app = express();
 app.use(express.static('../client'));
-app.use(express.static('./views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
+app.set('views', '../client');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
@@ -156,7 +156,7 @@ app.post("/adduser", function(req,res) {
 				console.log(err);
 				res.status(500).send();
 			} else {
-				createToken(username, req, res);
+				res.send({token: createToken(username)});
 			}
 		}
 	);
@@ -164,18 +164,18 @@ app.post("/adduser", function(req,res) {
 
 
 app.get('/logout', (req, res) => {
-	const tokenValue = req.headers.token;
+	const tokenValue = req.query.token;
 	isAuthenticated(tokenValue, (auth) => {
 		if (!auth) {
 			res.status(403).send();
 			return
 		} else {
-			con.query(queries.deleteTokenStr.replace('{tokenStr}', token), (err) => {
+			con.query(queries.deleteTokenStr.replace('{tokenStr}', tokenValue), (err) => {
 				if(err) {
 					console.log(err);
 					res.status(500).send();
 				} else {
-					res.status(200).send();
+					res.redirect(303, '/login/')
 				}
 			});
 		}
@@ -185,26 +185,49 @@ app.get('/logout', (req, res) => {
 
 //? NOTES
 app.get('/note', (req, res) => {
+	const { id } = req.query;
 	const tokenValue = req.query.token;
 	isAuthenticated(tokenValue, (auth) => {
 		if (!auth) {
 			res.status(403).send();
 			return
 		} else {
-			const { id } = req.query;
+			if (id === "newNote") {
+				let user = '';
+				con.query(queries.getTokenByStr.replace('{tokenStr}', tokenValue), (err, result) => {
+					if (err){
+						console.log(err);
+						res.status(500).send();
+					} else {
+						user = result[0].userName;
+					}
 
-			con.query(queries.getNotesByNotesID.replace('{notesID}', id), (err, result) => {
-				if (err) { 
-					console.log(err);
-					res.render('note/note.html', {title:"ERROR", content: "ERROR"});
-					return
-				} else {
-					console.log(result);
-					const title = result[0].Title;
-					const content = result[0].Content;
-					res.render('note/note.html', {title, content});
-				}
-			})
+				
+					console.log("Creating new note!");
+					con.query(queries.addNote.replace('{userName}', user), (err, result) => {
+						if (err) {
+							console.log(err);
+						} else {
+							console.log(result.insertId);
+							res.redirect(303, `/note/?id=${result.insertId}&token=${tokenValue}`);
+						}
+					})
+				})
+			}
+
+			else {
+				con.query(queries.getNotesByNotesID.replace('{notesID}', id), (err, result) => {
+					if (err) { 
+						console.log(err);
+						res.render('note/note.html', {title:"ERROR", content: "ERROR"});
+					} else {
+						console.log(result);
+						const title = result[0].Title;
+						const content = result[0].Content;
+						res.render('note/note.html', {title, content});
+					}
+				})
+			}
 		}
 	})
 })

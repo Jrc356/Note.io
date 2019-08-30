@@ -6,11 +6,11 @@
 
 
 "addUser" : "INSERT INTO userTable(userName, userPassword) VALUES ('{userName}','{userPassword}')",
-"getUserByUserID" : "select * from userTable where userID = '{userID}'",
-"getUserNotesByID" : "select * from userNotes where ownerID = '{userID}'",
+"getUserByUserID" : "select * from userTable where userName = '{userName}'",
+"getUserNotesByID" : "select * from userNotes where userName = '{userName}'",
 
 "getNotesByNotesID" : "select * from userNotes where notesID = '{notesID}'",
-"addNotes" : "INSERT INTO userNotes(Title, Content, ownerID) VALUES ('{Title}', '{Content}', '{ownerID}')",
+"addNotes" : "INSERT INTO userNotes(Title, Content, userName) VALUES ('{Title}', '{Content}', '{userName}')",
 "updateNote" : "UPDATE userNotes SET Title = '{Title}', Content = '{Content}' where notesID = '{notesID}'",
 "deleteNotesByID" : "DELETE FROM userNotes where notesID = '{notesID}'"
 }

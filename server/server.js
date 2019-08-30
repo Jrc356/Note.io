@@ -118,9 +118,19 @@ function isAuthenticated(token, callback) {
 
 //! ROUTES
 //? LOGIN/LOGOUT
+app.post('/verifyToken', (req, res) => {
+	const { token } = req.body;
+	isAuthenticated(token, (auth) => {
+		if(auth) {
+			res.sendStatus(200);
+		} else {
+			res.sendStatus(403);
+		}
+	})
+})
+
 app.post("/auth", function(req, res) {
 	const tokenObj = { token : ''};
-	console.log(req.body);
 	const { username, password } = req.body;
 
 	console.log(`Received auth request for username ${username}`);

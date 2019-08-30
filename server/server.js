@@ -49,16 +49,43 @@ con.connect(function(err) {
 function generateToken() {
 	
 	let token = "";
-	const chars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()[]\;',./{}|:<>?`~-=_+";
+	const chars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890";
 	
 
-	for (i=0; i < process.env.TOKEN_LENGTH; i++) {
-		token = token + chars[Math.floor(Math.random() * chars.length) - 1];
+	for (i=0; i < process.env.TOKEN_LENGTH-1; i++) {
+		token = token + chars[Math.floor(Math.random() * (chars.length-1))];
 	}
 
 	return token
 }
 
+/**
+ * Generates and inserts a token into the database
+ * then returns that token
+ *
+ * @param {string} username of user creating token
+ * @param {function} callback
+ * @returns {object} an object containing the token created and inserted
+ */
+function createToken(username){
+	console.log(`Creating new token for user ${username}`)
+	let token = generateToken();
+
+	query = queries.addToken.replace('{tokenStr}', token).replace('{userName}', username);
+	console.log(token);
+	console.log(query);
+	con.query(query, (err) => {
+		if(err){
+			console.log("ERROR CREATING TOKEN");
+			console.log(err);
+			token = "ERROR";
+		} else {
+			console.log("TOKEN ADDED SUCCESSFULLY");
+		}
+	});
+
+	return token;
+}
 
 /**
  * Queries database for token to check if token is valid
@@ -66,87 +93,91 @@ function generateToken() {
  * @param {string} token
  * @returns {boolean} if token is real
  */
-function isAuthenticated(token) {
-	con.query("QUERY FOR TOKEN token",
-		function(err,rows,fields) {
+function isAuthenticated(token, callback) {
+	console.log(`Authenticating token ${token}`);
+	con.query(queries.getTokenByStr.replace('{tokenStr}', token),
+		function(err,rows) {
 		if (err) {
 			console.log('Error during processing.');
 			console.log(err);
 		}
 		else {
-			if (rows.size == 0) {
-				return false;	
+			if (rows.length === 0) {
+				console.log("Auth Failed");
+				callback(false);	
 			}
 			else {
-				return true;	
+				console.log("Authenticated");
+				callback(true);	
 			}
 		}
 	});
 }
 
-/**
- * Generates and inserts a token into the database
- * then returns that token
- *
- * @returns {object} an object containing the token created and inserted
- */
-function createToken(){
-	let token = generateToken();
-
-	con.query("insert token query", (err, result) => {
-		if(err){
-			console.log(err);
-			token = "ERROR"
-		}
-	})
-
-	return {token}
-}
 //! END FUNCTIONS
 
 //! ROUTES
 //? LOGIN/LOGOUT
 app.post("/auth", function(req, res) {
-	const authObj = { 'token' : '', 'message' : '' };
+	const tokenObj = { token : ''};
+	console.log(req.body);
 	const { username, password } = req.body;
-	//Querying for username
-	con.query("get username and password",
-		function(err,rows,fields) {
+
+	console.log(`Received auth request for username ${username}`);
+	con.query(queries.getUserByUserName.replace('{userName}', username),
+		function(err, rows) {
 		if (err) {
 			console.log('Error during processing.');
 			console.log(err);
 		} else {
 			console.log("Obtained a response.")
 			if (rows.size == 0) {
-				authObj.message = 'Username was incorrect.';
-				res.send(authObj);
+				tokenObj.token = 'ERROR';
 			} else if (rows[0].userPassword != password) {
-				authObj.message = 'Password was incorrect.';
-				res.send(authObj);
+				tokenObj.token = 'ERROR';
 			} else {
-				res.send(createToken());
+				tokenObj.token = createToken(username);
 			}
+
+			res.send(tokenObj);
 		}
 	});
 });
 
 app.post("/adduser", function(req,res) {
-	console.log("adding user");
+	const { username, password } = req.body;
+
+	console.log(`adding user ${username}`);
+
+	con.query(
+		queries.addUser.replace('{userName}', username).replace('{userPassword}', password),
+		(err) => {
+			if(err) {
+				console.log(err);
+				res.status(500).send();
+			} else {
+				createToken(username, req, res);
+			}
+		}
+	);
 });
 
 
 app.get('/logout', (req, res) => {
-	const { token } = req.headers;
-	if (!isAuthenticated(token)) {
-		res.status(403).send();
-		return;
-	}
-
-	con.query("delete token query", (err, result) => {
-		if(err) {
-			console.log(err);
+	const tokenValue = req.headers.token;
+	isAuthenticated(tokenValue, (auth) => {
+		if (!auth) {
+			res.status(403).send();
+			return
 		} else {
-			res.send({status: "OK"});
+			con.query(queries.deleteTokenStr.replace('{tokenStr}', token), (err) => {
+				if(err) {
+					console.log(err);
+					res.status(500).send();
+				} else {
+					res.status(200).send();
+				}
+			});
 		}
 	});
 })
@@ -154,80 +185,89 @@ app.get('/logout', (req, res) => {
 
 //? NOTES
 app.get('/note', (req, res) => {
-	const { id } = req.query;
-
-	con.query("get note by id query", (err, result) => {
-		if (err) { 
-			console.log(err);
-			res.render('note/note.html', {title:"ERROR", content: "ERROR"});
+	const tokenValue = req.query.token;
+	isAuthenticated(tokenValue, (auth) => {
+		if (!auth) {
+			res.status(403).send();
 			return
 		} else {
-			const {title, content} = result;
-			res.render('note/note.html', {title, content});
+			const { id } = req.query;
+
+			con.query(queries.getNotesByNotesID.replace('{notesID}', id), (err, result) => {
+				if (err) { 
+					console.log(err);
+					res.render('note/note.html', {title:"ERROR", content: "ERROR"});
+					return
+				} else {
+					console.log(result);
+					const title = result[0].Title;
+					const content = result[0].Content;
+					res.render('note/note.html', {title, content});
+				}
+			})
 		}
-	});
+	})
 })
 
 app.get("/notes", function(req,res) {
 	const tokenValue = req.headers.token;
-
-	//Querying for token
-	if (isAuthenticated(tokenValue) == false) {
-		console.log("Auth Failed");
-		res.status(403);
-		res.end();
-	}
-	
-	//Querying for the notes from the database
-	con.query("get all notes for user query",
-		function(err,rows,fields){
-		if (err) {
-			console.log('Error during processing.');
-			console.log(err);
-		}
-		else {
-			console.log('Obtained a response.');
-			res.send(rows);
+	let user = '';
+	isAuthenticated(tokenValue, (auth) => {
+		if (!auth) {
+			res.status(403).send();
+			return
+		} else {
+			con.query(queries.getTokenByStr.replace('{tokenStr}', tokenValue), (err, result) => {
+				if (err){
+					console.log(err);
+					res.status(500).send();
+				} else {
+					user = result[0].userName;
+				}
+				console.log(`Retrieving notes for user ${user}`);
+			
+				con.query(queries.getNotesByUserName.replace('{userName}', user),
+					function(err, rows){
+					if (err) {
+						console.log('Error during processing.');
+						console.log(err);
+					}
+					else {
+						console.log('Obtained a response.');
+						res.send(rows);
+					}
+				});
+			})
 		}
 	});
 })
 
 app.post("/save", function(req,res) {
-	const { token } = req.headers;
-	if (!isAuthenticated(token)) {
-		res.status(403).send();
-		return;
-	}
-
-	const id = req.body.id;
-	const title = req.body.title;
-	const content = req.body.content;
-	console.log(`Saving note with id ${id}`);
-	
-	//TODO add insert query
-	res.send({status: 'ok'});
-
 	const tokenValue = req.headers.token;
-	
-	//Quering for token
-	if (isAuthenticated(tokenValue) == false) {
-		console.log("Auth Failed");
-		res.status(403);
-		res.end();
-	}
-	
-	con.query("saveQuery",
-		function(err,result) {
-		if (err) {
-			console.log('Error during insertion.');
-			console.log(err);
-			res.status(500).send();
+	isAuthenticated(tokenValue, (auth) => {
+		if (!auth) {
+			res.status(403).send();
+			return
+		} else {
+			const id = req.body.id;
+			const title = req.body.title;
+			const content = req.body.content;
+			console.log(`Saving note with id ${id}`);
+			
+			con.query(queries.updateNote.replace('{Title}', title).replace('{Content}', content).replace('{notesID}', id),
+				function(err) {
+				if (err) {
+					console.log('Error during insertion.');
+					console.log(err);
+					res.status(500).send();
+				}
+				else {
+					console.log("Note saved successfully");
+					res.sendStatus(200);
+				}
+			});
 		}
-		else {
-			res.status(200).send();
-		}
-	});
-	
+	})
 });
 
 //? END NOTES

@@ -14,6 +14,7 @@
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous">
     </script>
+    <script src="../common.js"></script>
     <script src="note.js"></script>
     <!-- End Scripts -->
   </head>
@@ -22,8 +23,8 @@
       <div id="wrapper">
         <div id="header">
           <ul id="navbar">
-            <li class="nav_item"><a href="/logout">Logout</a></li>
-            <li class="nav_item"><a href="/note">New Note</a></li>
+            <li class="nav_item"><a id="logout" href="/logout">Logout</a></li>
+            <li class="nav_item"><a id="newNote" href="/note/?id=newNote">New Note</a></li>
             <li class="nav_item"><a href="/home">Home</a></li>
           </ul> <!-- End navbar -->
         </div> <!-- End header -->
@@ -45,6 +46,7 @@
       <script>
         auto_grow(document.getElementById('editArea'));
         addAutoSave();
+        setTokens();
       </script>
 
     </body>

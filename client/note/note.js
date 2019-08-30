@@ -2,15 +2,9 @@ var timeout;
 
 var id = getParameterByName('id');
 
-function getToken() {
-  return sessionStorage.getItem('token');
-}
-
 function saveNote() {
   console.log(new Date() + " Saving note...");
   
-  const id = getParameterByName('id');
-
   $.ajax('http://localhost:3000/save', {
     method: "POST",
     headers: {

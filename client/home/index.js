@@ -3,15 +3,13 @@ function getToken() {
 }
 
 function getNotes() {
-  console.log('token: ' + getToken());
-
   $.ajax('http://localhost:3000/notes', {
     method: "GET",
     headers: {
       'token': getToken()
     },
     success: (data) => {
-      updateNotesTable(data.data);
+      updateNotesTable(data);
     },
     error: (err) => {
       console.log("error");
@@ -25,10 +23,12 @@ function updateNotesTable(notes) {
   const table = document.getElementById('notes').getElementsByTagName('tbody')[0];
 
   notes.forEach((note) => {
-    const {id, title, content} = note;
+    const id = note.notesID;
+    const title = note.Title;
+    const content = note.Content
     const row = table.insertRow(-1);
     row.classList = "note clickable-row";
-    row.setAttribute('data-href', `/note?id=${id}`);
+    row.setAttribute('data-href', `/note?id=${id}&token=${sessionStorage.getItem('token')}`);
 
     const titleTd = row.insertCell(-1);
     titleTd.classList = "notes_item";

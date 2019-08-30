@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS Notes;
 CREATE DATABASE Notes;
 USE Notes;
 
-CREATE USER IF NOT EXISTS 'noteio'@'localhost' IDENTIFIED BY 'noteio!';
+CREATE USER 'noteio'@'localhost' IDENTIFIED BY 'noteio!';
 GRANT ALL PRIVILEGES ON Notes.* TO 'noteio'@'localhost';
 FLUSH PRIVILEGES;
 

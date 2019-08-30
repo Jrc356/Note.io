@@ -21,7 +21,6 @@ function saveNote() {
       "content": $('#editArea').val(),
       "title": $('#title').val()
     },
-    dataType:'json',
     success: function(data){
       console.log('Note Saved');
       $('#status').attr('class', 'saved').text('Changes Saved');

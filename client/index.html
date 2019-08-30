@@ -1,8 +1,26 @@
 <!DOCTYPE html>
 <html>
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous">
+  </script>
   <script>
-    if (sessionStorage.getItem('token')){
-      window.location = '/home';
+    const token = sessionStorage.getItem('token')
+    if (token){
+      $.ajax('http://localhost:3000/verifyToken', {
+        method: "POST",
+        data: {
+          token
+        },
+        success: function(){
+          window.location = '/home';
+        },
+        error: function(err){
+          console.log(err)
+          window.location = '/login';
+        }
+      })
     } else {
       window.location = '/login';
     }

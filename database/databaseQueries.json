@@ -10,7 +10,7 @@
 "getNotesByUserName" : "select * from userNotes where userName = '{userName}'",
 
 "getNotesByNotesID" : "select * from userNotes where notesID = '{notesID}'",
-"addNotes" : "INSERT INTO userNotes(Title, Content, userName) VALUES ('{Title}', '{Content}', '{userName}')",
+"addNote" : "INSERT INTO userNotes(userName) VALUES ('{userName}')",
 "updateNote" : "UPDATE userNotes SET Title = '{Title}', Content = '{Content}' where notesID = '{notesID}'",
 "deleteNotesByID" : "DELETE FROM userNotes where notesID = '{notesID}'"
 }
